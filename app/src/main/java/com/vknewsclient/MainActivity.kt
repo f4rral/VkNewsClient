@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vknewsclient.ui.PostCard
+import com.vknewsclient.ui.screens.MainScreen
 import com.vknewsclient.ui.theme.VkNewsClientTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,17 +28,19 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             VkNewsClientTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background)
-                            .padding(innerPadding)
-                            .padding(8.dp)
-                    ) {
-                        PostCard()
-                    }
-                }
+                MainScreen()
+
+//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+//                    Box(
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                            .background(MaterialTheme.colorScheme.background)
+//                            .padding(innerPadding)
+//                            .padding(8.dp)
+//                    ) {
+//                        PostCard()
+//                    }
+//                }
             }
         }
     }
