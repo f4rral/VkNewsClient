@@ -24,19 +24,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.vknewsclient.data.NavigationItem
+import com.vknewsclient.domain.FeedPost
+import com.vknewsclient.ui.PostCard
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen() {
-    val scope = rememberCoroutineScope()
-
-    val snackBarHostState = remember {
-        SnackbarHostState()
-    }
-
-    val isFabVisible = remember {
-        mutableStateOf(true)
+    val feedPost = remember {
+        mutableStateOf(FeedPost())
     }
 
     Scaffold(
@@ -78,38 +75,27 @@ fun MainScreen() {
                 }
             }
         },
+    ) { innerPadding ->
+        PostCard(
+            feedPost = feedPost.value,
+            onStatisticItemClickListener = { newItem ->
+                val oldStatistics = feedPost.value.statistics
 
-        floatingActionButton = {
-            if (isFabVisible.value) {
-                FloatingActionButton(
-                    onClick = {
-                        scope.launch {
-                            val action = snackBarHostState.showSnackbar(
-                                message = "Это Snackbar",
-                                actionLabel = "Скрыть",
-                                duration = SnackbarDuration.Long
-                            )
-
-                            if (action == SnackbarResult.ActionPerformed) {
-                                isFabVisible.value = false
-                            }
+                val newStatistics = oldStatistics.toMutableList().apply {
+                    replaceAll { oldItem ->
+                        if (oldItem.type === newItem.type) {
+                            oldItem.copy(count = oldItem.count + 1)
+                        } else {
+                            oldItem
                         }
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Favorite,
-                        contentDescription = null
-                    )
                 }
-            }
-        },
 
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackBarHostState
-            )
-        }
-    ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding))
+                feedPost.value = feedPost.value.copy(statistics = newStatistics)
+            },
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(8.dp)
+        )
     }
 }

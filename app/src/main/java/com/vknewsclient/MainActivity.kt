@@ -29,18 +29,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             VkNewsClientTheme {
                 MainScreen()
-
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .background(MaterialTheme.colorScheme.background)
-//                            .padding(innerPadding)
-//                            .padding(8.dp)
-//                    ) {
-//                        PostCard()
-//                    }
-//                }
             }
         }
     }
