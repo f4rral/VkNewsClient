@@ -1,5 +1,6 @@
 package com.vknewsclient
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -44,9 +45,12 @@ class MainViewModel: ViewModel() {
     }
 
     fun remove(feedPost: FeedPost) {
-        val oldPost = feedPosts.value?.toMutableList() ?: mutableListOf()
-        oldPost.remove(feedPost)
+        val oldPosts = feedPosts.value?.toMutableList() ?: mutableListOf()
 
-        _feedPosts.value = oldPost
+        _feedPosts.value = oldPosts.apply {
+            removeAll {
+                it.id == feedPost.id
+            }
+        }
     }
 }

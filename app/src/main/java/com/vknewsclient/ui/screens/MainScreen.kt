@@ -1,5 +1,6 @@
 package com.vknewsclient.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -11,7 +12,10 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -85,33 +89,53 @@ fun MainScreen(
                 items = feedPosts.value,
                 key = { it.id }
             ) { feedPost ->
-                PostCard(
-                    feedPost = feedPost,
-                    onViewsClickListener = { statisticItem ->
-                        viewModel.updateCount(
-                            feedPost = feedPost,
-                            statisticItem = statisticItem
-                        )
-                    },
-                    onShareClickListener =  { statisticItem ->
-                        viewModel.updateCount(
-                            feedPost = feedPost,
-                            statisticItem = statisticItem
-                        )
-                    },
-                    onCommentClickListener =  { statisticItem ->
-                        viewModel.updateCount(
-                            feedPost = feedPost,
-                            statisticItem = statisticItem
-                        )
-                    },
-                    onLikeClickListener =  { statisticItem ->
-                        viewModel.updateCount(
-                            feedPost = feedPost,
-                            statisticItem = statisticItem
-                        )
-                    },
+                val dismissState = rememberSwipeToDismissBoxState(
+                    confirmValueChange = {
+                        if (it == SwipeToDismissBoxValue.EndToStart) {
+                            viewModel.remove(feedPost)
+
+                            true
+                        }
+
+                        false
+                    }
                 )
+
+                SwipeToDismissBox(
+                    state = dismissState,
+                    backgroundContent = {},
+                    enableDismissFromStartToEnd = false,
+                    enableDismissFromEndToStart = true,
+                    modifier = Modifier.animateItem()
+                ) {
+                    PostCard(
+                        feedPost = feedPost,
+                        onViewsClickListener = { statisticItem ->
+                            viewModel.updateCount(
+                                feedPost = feedPost,
+                                statisticItem = statisticItem
+                            )
+                        },
+                        onShareClickListener =  { statisticItem ->
+                            viewModel.updateCount(
+                                feedPost = feedPost,
+                                statisticItem = statisticItem
+                            )
+                        },
+                        onCommentClickListener =  { statisticItem ->
+                            viewModel.updateCount(
+                                feedPost = feedPost,
+                                statisticItem = statisticItem
+                            )
+                        },
+                        onLikeClickListener =  { statisticItem ->
+                            viewModel.updateCount(
+                                feedPost = feedPost,
+                                statisticItem = statisticItem
+                            )
+                        },
+                    )
+                }
             }
         }
     }
