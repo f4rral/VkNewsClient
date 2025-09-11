@@ -1,51 +1,44 @@
 package com.vknewsclient.ui.screens
 
-import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.vknewsclient.MainViewModel
 import com.vknewsclient.data.NavigationItem
-import com.vknewsclient.ui.PostCard
 
 @Composable
 fun MainScreen(
     viewModel: MainViewModel
 ) {
+    val selectedNavItem by viewModel.selectedNavItem.observeAsState(NavigationItem.Home)
+
     Scaffold(
         bottomBar = {
             NavigationBar {
-                val selectedItemPosition = remember {
-                    mutableIntStateOf(0)
-                }
-
                 val items = listOf(
                     NavigationItem.Home,
                     NavigationItem.Favorites,
                     NavigationItem.Profile,
                 )
 
-                items.forEachIndexed { index, item ->
+                items.forEach { item ->
                     NavigationBarItem(
                         label = {
                             Text(text = stringResource(item.titleResId))
@@ -56,8 +49,8 @@ fun MainScreen(
                                 contentDescription = null
                             )
                         },
-                        selected = selectedItemPosition.intValue == index,
-                        onClick = { selectedItemPosition.intValue = index },
+                        selected = selectedNavItem == item,
+                        onClick = { viewModel.selectedNavItem(item) },
                         colors = NavigationBarItemColors(
                             selectedTextColor = MaterialTheme.colorScheme.onPrimary,
                             selectedIconColor = MaterialTheme.colorScheme.onPrimary,
@@ -72,71 +65,42 @@ fun MainScreen(
             }
         },
     ) { innerPadding ->
-        val feedPosts = viewModel.feedPosts.observeAsState(listOf())
-
-        LazyColumn(
-            contentPadding = PaddingValues(
-                top = 16.dp,
-                start = 8.dp,
-                end = 8.dp,
-                bottom = 16.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .padding(innerPadding)
-        ) {
-            items(
-                items = feedPosts.value,
-                key = { it.id }
-            ) { feedPost ->
-                val dismissState = rememberSwipeToDismissBoxState(
-                    confirmValueChange = {
-                        if (it == SwipeToDismissBoxValue.EndToStart) {
-                            viewModel.remove(feedPost)
-
-                            true
-                        }
-
-                        false
-                    }
+        when(selectedNavItem) {
+            NavigationItem.Home -> {
+                HomeScreen(
+                    viewModel = viewModel,
+                    innerPadding = innerPadding
                 )
+            }
 
-                SwipeToDismissBox(
-                    state = dismissState,
-                    backgroundContent = {},
-                    enableDismissFromStartToEnd = false,
-                    enableDismissFromEndToStart = true,
-                    modifier = Modifier.animateItem()
-                ) {
-                    PostCard(
-                        feedPost = feedPost,
-                        onViewsClickListener = { statisticItem ->
-                            viewModel.updateCount(
-                                feedPost = feedPost,
-                                statisticItem = statisticItem
-                            )
-                        },
-                        onShareClickListener =  { statisticItem ->
-                            viewModel.updateCount(
-                                feedPost = feedPost,
-                                statisticItem = statisticItem
-                            )
-                        },
-                        onCommentClickListener =  { statisticItem ->
-                            viewModel.updateCount(
-                                feedPost = feedPost,
-                                statisticItem = statisticItem
-                            )
-                        },
-                        onLikeClickListener =  { statisticItem ->
-                            viewModel.updateCount(
-                                feedPost = feedPost,
-                                statisticItem = statisticItem
-                            )
-                        },
-                    )
-                }
+            NavigationItem.Favorites -> {
+                TextCounter(
+                    name = "Favorites",
+                    innerPadding = innerPadding
+                )
+            }
+
+            NavigationItem.Profile -> {
+                TextCounter(
+                    name = "Profile",
+                    innerPadding = innerPadding
+                )
             }
         }
     }
+}
+
+@Composable
+private fun TextCounter(name: String, innerPadding: PaddingValues) {
+    var count by remember {
+        mutableIntStateOf(0)
+    }
+
+    Text(
+        text = "$name Count: $count",
+        color = Color.Black,
+        modifier = Modifier
+            .padding(innerPadding)
+            .clickable { count++ }
+    )
 }
