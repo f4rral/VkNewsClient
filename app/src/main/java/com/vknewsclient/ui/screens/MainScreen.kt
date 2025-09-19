@@ -12,26 +12,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.vknewsclient.MainViewModel
 import com.vknewsclient.data.NavigationItem
+import com.vknewsclient.navigation.AppNavGraph
 
 @Composable
 fun MainScreen(
     viewModel: MainViewModel
 ) {
-    val selectedNavItem by viewModel.selectedNavItem.observeAsState(NavigationItem.Home)
+    val navHostController = rememberNavController()
 
     Scaffold(
         bottomBar = {
             NavigationBar {
+                val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
                 val items = listOf(
                     NavigationItem.Home,
                     NavigationItem.Favorites,
@@ -49,8 +52,8 @@ fun MainScreen(
                                 contentDescription = null
                             )
                         },
-                        selected = selectedNavItem == item,
-                        onClick = { viewModel.selectedNavItem(item) },
+                        selected = currentRoute == item.screen.route,
+                        onClick = { navHostController.navigate(route = item.screen.route) },
                         colors = NavigationBarItemColors(
                             selectedTextColor = MaterialTheme.colorScheme.onPrimary,
                             selectedIconColor = MaterialTheme.colorScheme.onPrimary,
@@ -65,28 +68,27 @@ fun MainScreen(
             }
         },
     ) { innerPadding ->
-        when(selectedNavItem) {
-            NavigationItem.Home -> {
+        AppNavGraph(
+            navHostController = navHostController,
+            homeScreenContent = {
                 HomeScreen(
                     viewModel = viewModel,
                     innerPadding = innerPadding
                 )
-            }
-
-            NavigationItem.Favorites -> {
+            },
+            favoriteScreenContent = {
                 TextCounter(
                     name = "Favorites",
                     innerPadding = innerPadding
                 )
-            }
-
-            NavigationItem.Profile -> {
+            },
+            profileScreenContent = {
                 TextCounter(
                     name = "Profile",
                     innerPadding = innerPadding
                 )
-            }
-        }
+            },
+        )
     }
 }
 
