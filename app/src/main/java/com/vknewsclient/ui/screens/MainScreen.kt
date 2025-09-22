@@ -24,18 +24,19 @@ import androidx.navigation.compose.rememberNavController
 import com.vknewsclient.MainViewModel
 import com.vknewsclient.data.NavigationItem
 import com.vknewsclient.navigation.AppNavGraph
-import com.vknewsclient.navigation.Screen
+import com.vknewsclient.navigation.NavigationState
+import com.vknewsclient.navigation.rememberNavigationState
 
 @Composable
 fun MainScreen(
     viewModel: MainViewModel
 ) {
-    val navHostController = rememberNavController()
+    val navigationState = rememberNavigationState()
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-                val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+                val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
                 val items = listOf(
                     NavigationItem.Home,
@@ -56,13 +57,7 @@ fun MainScreen(
                         },
                         selected = currentRoute == item.screen.route,
                         onClick = {
-                            navHostController.navigate(route = item.screen.route) {
-                                popUpTo(Screen.NewsFeed.route) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            navigationState.navigateTo(item.screen.route)
                         },
                         colors = NavigationBarItemColors(
                             selectedTextColor = MaterialTheme.colorScheme.onPrimary,
@@ -79,7 +74,7 @@ fun MainScreen(
         },
     ) { innerPadding ->
         AppNavGraph(
-            navHostController = navHostController,
+            navHostController = navigationState.navHostController,
             homeScreenContent = {
                 HomeScreen(
                     viewModel = viewModel,
