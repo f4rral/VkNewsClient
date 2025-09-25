@@ -22,10 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.vknewsclient.NewsFeedViewModel
 import com.vknewsclient.data.NavigationItem
 import com.vknewsclient.domain.FeedPost
 import com.vknewsclient.navigation.AppNavGraph
+import com.vknewsclient.navigation.Screen
 import com.vknewsclient.navigation.rememberNavigationState
 
 @Composable
@@ -77,22 +77,14 @@ fun MainScreen() {
     ) { innerPadding ->
         AppNavGraph(
             navHostController = navigationState.navHostController,
-            homeScreenContent = {
-                if (commentsToPost.value == null) {
-                    HomeScreen(
-                        innerPadding = innerPadding,
-                        onCommentClickListener = {
-                            commentsToPost.value = it
-                        }
-                    )
-                } else {
-                    CommentsScreen(
-                        feedPost = commentsToPost.value!!,
-                        onBackPressed = {
-                            commentsToPost.value = null
-                        }
-                    )
-                }
+            newsFeedScreenContent = {
+                HomeScreen(
+                    innerPadding = innerPadding,
+                    onCommentClickListener = {
+                        commentsToPost.value = it
+                        navigationState.navigateTo(Screen.Comments.route)
+                    }
+                )
             },
             favoriteScreenContent = {
                 TextCounter(
@@ -104,6 +96,14 @@ fun MainScreen() {
                 TextCounter(
                     name = "Profile",
                     innerPadding = innerPadding
+                )
+            },
+            commentsScreenContent = {
+                CommentsScreen(
+                    feedPost = commentsToPost.value!!,
+                    onBackPressed = {
+                        commentsToPost.value = null
+                    }
                 )
             },
         )
