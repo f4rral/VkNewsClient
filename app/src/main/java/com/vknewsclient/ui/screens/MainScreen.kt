@@ -1,5 +1,6 @@
 package com.vknewsclient.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.vknewsclient.data.NavigationItem
 import com.vknewsclient.domain.FeedPost
@@ -39,7 +41,7 @@ fun MainScreen() {
         bottomBar = {
             NavigationBar {
                 val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+
                 val items = listOf(
                     NavigationItem.Home,
                     NavigationItem.Favorites,
@@ -47,6 +49,10 @@ fun MainScreen() {
                 )
 
                 items.forEach { item ->
+                    val selected = navBackStackEntry?.destination?.hierarchy?.any {
+                        it.route == item.screen.route
+                    } ?: false
+
                     NavigationBarItem(
                         label = {
                             Text(text = stringResource(item.titleResId))
@@ -57,9 +63,11 @@ fun MainScreen() {
                                 contentDescription = null
                             )
                         },
-                        selected = currentRoute == item.screen.route,
+                        selected = selected,
                         onClick = {
-                            navigationState.navigateTo(item.screen.route)
+                            if (!selected) {
+                                navigationState.navigateTo(item.screen.route)
+                            }
                         },
                         colors = NavigationBarItemColors(
                             selectedTextColor = MaterialTheme.colorScheme.onPrimary,
@@ -82,7 +90,7 @@ fun MainScreen() {
                     innerPadding = innerPadding,
                     onCommentClickListener = {
                         commentsToPost.value = it
-                        navigationState.navigateTo(Screen.Comments.route)
+                        navigationState.navigateToComments()
                     }
                 )
             },
@@ -102,7 +110,7 @@ fun MainScreen() {
                 CommentsScreen(
                     feedPost = commentsToPost.value!!,
                     onBackPressed = {
-                        commentsToPost.value = null
+                        navigationState.navHostController.popBackStack()
                     }
                 )
             },
