@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
+    id("vkid.manifest.placeholders")
 }
 
 android {
@@ -56,6 +57,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.gson)
     implementation(libs.coil.compose)
+    implementation(libs.vkid)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

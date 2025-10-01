@@ -15,6 +15,7 @@ navigationCompose = "2.9.4"
 lifecycleViewmodelComposeVersion = "2.9.4"
 gson = "2.13.1"
 coilCompose = "2.7.0"
+vkid = "2.5.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +39,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelComposeVersion" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
+vkid = { module = "com.vk.id:vkid", version.ref = "vkid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
