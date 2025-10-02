@@ -1,6 +1,5 @@
-package com.vknewsclient.ui.screens
+package com.vknewsclient.presentation.news
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -13,16 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.vknewsclient.NewsFeedViewModel
 import com.vknewsclient.domain.FeedPost
-import com.vknewsclient.state.NewsFeedScreenState
-import com.vknewsclient.ui.PostCard
 
 @Composable
-fun HomeScreen(
+fun NewsFeedScreen(
     innerPadding: PaddingValues,
     onCommentClickListener: (feedPost: FeedPost) -> Unit
 ) {

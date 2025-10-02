@@ -1,4 +1,4 @@
-package com.vknewsclient
+package com.vknewsclient.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,11 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vk.id.VKID
-import com.vknewsclient.state.AuthState
-import com.vknewsclient.ui.screens.LoginScreen
-import com.vknewsclient.ui.screens.MainScreen
 import com.vknewsclient.ui.theme.VkNewsClientTheme
-import com.vknewsclient.viewModels.MainViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

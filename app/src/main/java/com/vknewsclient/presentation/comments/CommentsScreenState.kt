@@ -1,4 +1,4 @@
-package com.vknewsclient.state
+package com.vknewsclient.presentation.comments
 
 import com.vknewsclient.domain.FeedPost
 import com.vknewsclient.domain.PostComment

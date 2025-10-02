@@ -1,4 +1,4 @@
-package com.vknewsclient.ui.screens
+package com.vknewsclient.presentation.comments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -29,11 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.vknewsclient.CommentsViewModel
-import com.vknewsclient.CommentsViewModelFactory
 import com.vknewsclient.domain.FeedPost
 import com.vknewsclient.domain.PostComment
-import com.vknewsclient.state.CommentsScreenState
 import com.vknewsclient.ui.theme.VkNewsClientTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

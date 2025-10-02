@@ -1,4 +1,4 @@
-package com.vknewsclient.viewModels
+package com.vknewsclient.presentation.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +8,6 @@ import com.vk.id.AccessToken
 import com.vk.id.VKID
 import com.vk.id.VKIDAuthFail
 import com.vk.id.auth.VKIDAuthCallback
-import com.vknewsclient.state.AuthState
 import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
@@ -17,12 +16,12 @@ class MainViewModel: ViewModel() {
     val authState: LiveData<AuthState> = _authState
 
     init {
-        _authState.value = if (VKID.instance.accessToken?.idToken.isNullOrEmpty()) AuthState.NotAuthorized else AuthState.Authorized
+        _authState.value = if (VKID.Companion.instance.accessToken?.idToken.isNullOrEmpty()) AuthState.NotAuthorized else AuthState.Authorized
     }
 
     fun auth() {
         viewModelScope.launch {
-            VKID.instance.authorize(_vkAuthCallback)
+            VKID.Companion.instance.authorize(_vkAuthCallback)
         }
     }
 
