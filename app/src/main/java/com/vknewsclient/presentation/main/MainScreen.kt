@@ -24,6 +24,7 @@ import com.vknewsclient.presentation.main.NavigationItem
 import com.vknewsclient.navigation.AppNavGraph
 import com.vknewsclient.navigation.rememberNavigationState
 import com.vknewsclient.presentation.comments.CommentsScreen
+import com.vknewsclient.presentation.gift.GiftsScreen
 import com.vknewsclient.presentation.news.NewsFeedScreen
 
 @Composable
@@ -79,12 +80,16 @@ fun MainScreen() {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsFeedScreenContent = {
-                NewsFeedScreen(
-                    innerPadding = innerPadding,
-                    onCommentClickListener = { feedPost ->
-                        navigationState.navigateToComments(feedPost = feedPost)
-                    }
+                GiftsScreen(
+                    innerPadding = innerPadding
                 )
+
+//                NewsFeedScreen(
+//                    innerPadding = innerPadding,
+//                    onCommentClickListener = { feedPost ->
+//                        navigationState.navigateToComments(feedPost = feedPost)
+//                    }
+//                )
             },
             favoriteScreenContent = {
                 TextCounter(
