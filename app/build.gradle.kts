@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.android.sdk.api)
     implementation(libs.android.sdk.core)
     testImplementation(libs.junit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
