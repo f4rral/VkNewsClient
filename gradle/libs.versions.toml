@@ -16,6 +16,8 @@ lifecycleViewmodelComposeVersion = "2.9.4"
 gson = "2.13.1"
 coilCompose = "2.7.0"
 vkid = "2.5.1"
+androidSdkApi = "4.1.0"
+androidSdkCore = "4.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +42,8 @@ lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
 vkid = { module = "com.vk.id:vkid", version.ref = "vkid" }
+android-sdk-api = { group = "com.vk", name = "android-sdk-api", version.ref = "androidSdkApi" }
+android-sdk-core = { group = "com.vk", name = "android-sdk-core", version.ref = "androidSdkCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

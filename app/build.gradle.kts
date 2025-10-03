@@ -58,6 +58,8 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.coil.compose)
     implementation(libs.vkid)
+    implementation(libs.android.sdk.api)
+    implementation(libs.android.sdk.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
