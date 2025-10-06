@@ -1,6 +1,7 @@
 package com.vknewsclient.presentation.main
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
@@ -29,5 +30,11 @@ sealed class NavigationItem(
         screen = Screen.Profile,
         titleResId = R.string.navigation_item_profile,
         icon = Icons.Outlined.Person,
+    )
+
+    object Gifts: NavigationItem(
+        screen = Screen.Gifts,
+        titleResId = R.string.navigation_item_gifts,
+        icon = Icons.Filled.Star,
     )
 }

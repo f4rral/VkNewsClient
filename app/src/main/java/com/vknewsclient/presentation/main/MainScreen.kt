@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.vknewsclient.presentation.main.NavigationItem
 import com.vknewsclient.navigation.AppNavGraph
 import com.vknewsclient.navigation.rememberNavigationState
 import com.vknewsclient.presentation.comments.CommentsScreen
@@ -40,6 +39,7 @@ fun MainScreen() {
                     NavigationItem.Home,
                     NavigationItem.Favorites,
                     NavigationItem.Profile,
+                    NavigationItem.Gifts
                 )
 
                 items.forEach { item ->
@@ -80,16 +80,12 @@ fun MainScreen() {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsFeedScreenContent = {
-                GiftsScreen(
-                    innerPadding = innerPadding
+                NewsFeedScreen(
+                    innerPadding = innerPadding,
+                    onCommentClickListener = { feedPost ->
+                        navigationState.navigateToComments(feedPost = feedPost)
+                    }
                 )
-
-//                NewsFeedScreen(
-//                    innerPadding = innerPadding,
-//                    onCommentClickListener = { feedPost ->
-//                        navigationState.navigateToComments(feedPost = feedPost)
-//                    }
-//                )
             },
             favoriteScreenContent = {
                 TextCounter(
@@ -111,6 +107,11 @@ fun MainScreen() {
                     }
                 )
             },
+            giftsScreenContent = {
+                GiftsScreen(
+                    innerPadding = innerPadding
+                )
+            }
         )
     }
 }

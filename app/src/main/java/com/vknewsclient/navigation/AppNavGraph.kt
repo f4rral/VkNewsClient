@@ -13,6 +13,7 @@ fun AppNavGraph(
     commentsScreenContent: @Composable (feedPost: FeedPost) -> Unit,
     favoriteScreenContent: @Composable () -> Unit,
     profileScreenContent: @Composable () -> Unit,
+    giftsScreenContent: @Composable () -> Unit,
 ) {
     NavHost(
         navController = navHostController,
@@ -29,6 +30,10 @@ fun AppNavGraph(
 
         composable(route = Screen.Profile.route) {
             profileScreenContent()
+        }
+
+        composable(route = Screen.Gifts.route) {
+            giftsScreenContent()
         }
     }
 }

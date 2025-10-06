@@ -21,6 +21,7 @@ sealed class Screen(
     object NewsFeed: Screen(ROUTE_NEWS_FEED)
     object Favorite: Screen(ROUTE_FAVORITE)
     object Profile: Screen(ROUTE_PROFILE)
+    object Gifts: Screen(ROUTE_GIFTS)
 
     companion object {
         const val KEY_FEED_POST = "feed_post"
@@ -30,6 +31,7 @@ sealed class Screen(
         const val ROUTE_NEWS_FEED = "news_feed"
         const val ROUTE_FAVORITE = "favorite"
         const val ROUTE_PROFILE = "profile"
+        const val ROUTE_GIFTS = "gifts"
     }
 }
 
