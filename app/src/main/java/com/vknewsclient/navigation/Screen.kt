@@ -25,7 +25,6 @@ sealed class Screen(
 
     companion object {
         const val KEY_FEED_POST = "feed_post"
-
         const val ROUTE_HOME = "home"
         const val ROUTE_COMMENTS = "comments/{$KEY_FEED_POST}"
         const val ROUTE_NEWS_FEED = "news_feed"

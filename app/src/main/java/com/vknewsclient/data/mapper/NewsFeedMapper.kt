@@ -1,0 +1,45 @@
+package com.vknewsclient.data.mapper
+
+import com.vknewsclient.data.model.newsFeed.NewsFeedGetDto
+import com.vknewsclient.domain.FeedPost
+import com.vknewsclient.domain.StatisticItem
+import com.vknewsclient.domain.StatisticType
+import kotlin.math.absoluteValue
+
+class NewsFeedMapper {
+    fun mapResponseToPostDto(httpGet: NewsFeedGetDto): List<FeedPost> {
+        val response = httpGet.response
+        val result = mutableListOf<FeedPost>()
+
+        val posts = response.items
+        val groups = response.groups
+
+        for(post in posts) {
+            if (post.id == null) {
+                continue
+            }
+
+            val group = groups.find { it.id == post.sourceId.absoluteValue } ?: continue
+
+
+            val feedPost = FeedPost(
+                id = post.id,
+                communityName = group.name,
+                publicationDate = post.date.toString(),
+                communityImgUrl = group.photoUrl200,
+                contentText = post.text ?: "",
+                contentImageResUrl = post.attachments?.firstOrNull()?.photo?.sizes?.lastOrNull()?.url,
+                statistics = listOf(
+                    StatisticItem(type = StatisticType.LIKES, count = post.likes?.count ?: 0),
+                    StatisticItem(type = StatisticType.VIEWS, count = post.views?.count ?: 0),
+                    StatisticItem(type = StatisticType.SHARES, count = post.reposts?.count ?: 0),
+                    StatisticItem(type = StatisticType.COMMENTS, count = post.comments?.count ?: 0),
+                ),
+            )
+
+            result.add(feedPost)
+        }
+
+        return result.distinctBy { it.id }
+    }
+}

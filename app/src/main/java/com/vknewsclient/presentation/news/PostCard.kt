@@ -1,6 +1,5 @@
 package com.vknewsclient.presentation.news
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.vknewsclient.R
 import com.vknewsclient.domain.FeedPost
 import com.vknewsclient.domain.StatisticItem
@@ -59,8 +59,8 @@ fun PostCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Image(
-                painter = painterResource(feedPost.contentImageResId),
+            AsyncImage(
+                model = feedPost.contentImageResUrl,
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
@@ -90,11 +90,11 @@ private fun PostHeader(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Image(
+        AsyncImage(
+            model = feedPost.communityImgUrl,
             modifier = Modifier
                 .size(50.dp)
                 .clip(CircleShape),
-            painter = painterResource(feedPost.avatarResId),
             contentDescription = null
         )
 
@@ -219,7 +219,20 @@ private fun IconWithText(
 fun PreviewLightPostCard() {
     VkNewsClientTheme(darkTheme = true) {
         PostCard(
-            feedPost = FeedPost(),
+            feedPost = FeedPost(
+                id = "1",
+                communityName = "communityName",
+                publicationDate = 1773415043.toString(),
+                communityImgUrl = "",
+                contentText = "contentText",
+                contentImageResUrl = "",
+                statistics = listOf(
+                    StatisticItem(type = StatisticType.LIKES, count = 99),
+                    StatisticItem(type = StatisticType.COMMENTS, count = 99),
+                    StatisticItem(type = StatisticType.SHARES, count = 99),
+                    StatisticItem(type = StatisticType.VIEWS, count = 99)
+                )
+            ),
             onViewsClickListener = { },
             onShareClickListener = { },
             onCommentClickListener = { },
@@ -233,7 +246,20 @@ fun PreviewLightPostCard() {
 fun PreviewDarkPostCard() {
     VkNewsClientTheme(darkTheme = false) {
         PostCard(
-            feedPost = FeedPost(),
+            feedPost = FeedPost(
+                id = "1",
+                communityName = "communityName",
+                publicationDate = 1773415043.toString(),
+                communityImgUrl = "",
+                contentText = "contentText",
+                contentImageResUrl = "",
+                statistics = listOf(
+                    StatisticItem(type = StatisticType.LIKES, count = 99),
+                    StatisticItem(type = StatisticType.COMMENTS, count = 99),
+                    StatisticItem(type = StatisticType.SHARES, count = 99),
+                    StatisticItem(type = StatisticType.VIEWS, count = 99)
+                )
+            ),
             onViewsClickListener = { },
             onShareClickListener = { },
             onCommentClickListener = { },

@@ -36,7 +36,7 @@ class MainViewModel(): ViewModel() {
             VKID.instance.authorize(
                 callback = _vkAuthCallback,
                 params = VKIDAuthParams {
-                    scopes = setOf("email", "wall")
+                    scopes = setOf("email", "wall", "friends")
                     oAuth = OAuth.VK
                 }
             )
