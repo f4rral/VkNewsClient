@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +32,7 @@ import com.vknewsclient.domain.FeedPost
 import com.vknewsclient.domain.StatisticItem
 import com.vknewsclient.domain.StatisticType
 import com.vknewsclient.domain.getItemByType
+import com.vknewsclient.ui.theme.DarkRed
 import com.vknewsclient.ui.theme.VkNewsClientTheme
 
 @Composable
@@ -76,6 +78,7 @@ fun PostCard(
                 onShareClickListener = onShareClickListener,
                 onCommentClickListener = onCommentClickListener,
                 onLikeClickListener = onLikeClickListener,
+                isLiked = feedPost.isLiked,
             )
         }
     }
@@ -135,6 +138,7 @@ private fun Statistics(
     onShareClickListener: (StatisticItem) -> Unit,
     onCommentClickListener: (StatisticItem) -> Unit,
     onLikeClickListener: (StatisticItem) -> Unit,
+    isLiked: Boolean = true,
 ) {
     Row {
         Row(
@@ -144,7 +148,7 @@ private fun Statistics(
             val viewsItem = statistics.getItemByType(StatisticType.VIEWS)
             IconWithText(
                 iconResId = R.drawable.ic_views_count,
-                text = viewsItem.count.toString(),
+                text = formatStatisticCount(viewsItem.count),
                 onItemClickListener = {
                     onViewsClickListener(viewsItem)
                 }
@@ -159,7 +163,7 @@ private fun Statistics(
             val sharesItem = statistics.getItemByType(StatisticType.SHARES)
             IconWithText(
                 iconResId = R.drawable.ic_share,
-                text = sharesItem.count.toString(),
+                text = formatStatisticCount(sharesItem.count),
                 onItemClickListener = {
                     onShareClickListener(sharesItem)
                 }
@@ -168,7 +172,7 @@ private fun Statistics(
             val commentsItem = statistics.getItemByType(StatisticType.COMMENTS)
             IconWithText(
                 iconResId = R.drawable.ic_comment,
-                text = commentsItem.count.toString(),
+                text = formatStatisticCount(commentsItem.count),
                 onItemClickListener = {
                     onCommentClickListener(commentsItem)
                 }
@@ -176,8 +180,9 @@ private fun Statistics(
 
             val likesItem = statistics.getItemByType(StatisticType.LIKES)
             IconWithText(
-                iconResId = R.drawable.ic_like,
-                text = likesItem.count.toString(),
+                iconResId = if (isLiked) R.drawable.ic_like_set else R.drawable.ic_like,
+                tint = if (isLiked) DarkRed else MaterialTheme.colorScheme.onSecondary,
+                text = formatStatisticCount(likesItem.count),
                 onItemClickListener = {
                     onLikeClickListener(likesItem)
                 }
@@ -186,11 +191,22 @@ private fun Statistics(
     }
 }
 
+private fun formatStatisticCount(count: Int): String {
+    return if (count > 100_000) {
+        String.format("%sK", (count / 1000))
+    } else if (count > 1000) {
+        String.format("%.1fK", (count / 1000f))
+    } else {
+        count.toString()
+    }
+}
+
 @Composable
 private fun IconWithText(
     iconResId: Int,
     text: String,
-    onItemClickListener: () -> Unit
+    onItemClickListener: () -> Unit,
+    tint: Color = MaterialTheme.colorScheme.onSecondary
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -200,9 +216,10 @@ private fun IconWithText(
             }
     ) {
         Icon(
+            modifier = Modifier.size(20.dp),
             painter = painterResource(iconResId),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSecondary
+            tint = tint
         )
 
         Spacer(modifier = Modifier.width(4.dp))
@@ -226,11 +243,12 @@ fun PreviewLightPostCard() {
                 communityImgUrl = "",
                 contentText = "contentText",
                 contentImageResUrl = "",
+                isLiked = false,
                 statistics = listOf(
                     StatisticItem(type = StatisticType.LIKES, count = 99),
-                    StatisticItem(type = StatisticType.COMMENTS, count = 99),
-                    StatisticItem(type = StatisticType.SHARES, count = 99),
-                    StatisticItem(type = StatisticType.VIEWS, count = 99)
+                    StatisticItem(type = StatisticType.COMMENTS, count = 999),
+                    StatisticItem(type = StatisticType.SHARES, count = 9999),
+                    StatisticItem(type = StatisticType.VIEWS, count = 999999)
                 )
             ),
             onViewsClickListener = { },
@@ -253,11 +271,12 @@ fun PreviewDarkPostCard() {
                 communityImgUrl = "",
                 contentText = "contentText",
                 contentImageResUrl = "",
+                isLiked = true,
                 statistics = listOf(
                     StatisticItem(type = StatisticType.LIKES, count = 99),
-                    StatisticItem(type = StatisticType.COMMENTS, count = 99),
-                    StatisticItem(type = StatisticType.SHARES, count = 99),
-                    StatisticItem(type = StatisticType.VIEWS, count = 99)
+                    StatisticItem(type = StatisticType.COMMENTS, count = 999),
+                    StatisticItem(type = StatisticType.SHARES, count = 9999),
+                    StatisticItem(type = StatisticType.VIEWS, count = 999999)
                 )
             ),
             onViewsClickListener = { },
