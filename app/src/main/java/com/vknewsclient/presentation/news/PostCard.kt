@@ -61,16 +61,18 @@ fun PostCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            AsyncImage(
-                model = feedPost.contentImageResUrl,
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
+            if (feedPost.contentImageResUrl != null) {
+                AsyncImage(
+                    model = feedPost.contentImageResUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
+            }
 
             Statistics(
                 statistics = feedPost.statistics,
@@ -230,7 +232,7 @@ private fun IconWithText(
         )
     }
 }
-
+// изображений
 @Preview
 @Composable
 fun PreviewLightPostCard() {
