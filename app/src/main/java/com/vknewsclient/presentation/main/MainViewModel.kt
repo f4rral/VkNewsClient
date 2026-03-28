@@ -26,7 +26,6 @@ class MainViewModel(): ViewModel() {
         if (accessToken == null) {
             _authState.value = AuthState.NotAuthorized
         } else {
-            _authState.value = AuthState.Authorized
             refreshToken()
         }
     }
@@ -45,19 +44,19 @@ class MainViewModel(): ViewModel() {
 
     fun refreshToken() {
         viewModelScope.launch {
-            viewModelScope.launch {
-                VKID.instance.refreshToken(
-                    callback = object : VKIDRefreshTokenCallback {
-                        override fun onSuccess(token: AccessToken) {
-                            Log.d("MainViewModel", "refreshToken onSuccess")
-                            logToken()
-                        }
-                        override fun onFail(fail: VKIDRefreshTokenFail) {
-                            Log.d("MainViewModel", "refreshToken onFail ${fail.description}")
-                        }
+            VKID.instance.refreshToken(
+                callback = object : VKIDRefreshTokenCallback {
+                    override fun onSuccess(token: AccessToken) {
+                        Log.d("MainViewModel", "refreshToken onSuccess ${token.token}")
+
+                        _authState.value = AuthState.Authorized
+                        logToken()
                     }
-                )
-            }
+                    override fun onFail(fail: VKIDRefreshTokenFail) {
+                        Log.d("MainViewModel", "refreshToken onFail ${fail.description}")
+                    }
+                }
+            )
         }
     }
 
