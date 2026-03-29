@@ -1,5 +1,6 @@
 package com.vknewsclient.presentation.news
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.vknewsclient.data.repository.NewsFeedRepository
 import com.vknewsclient.domain.FeedPost
 import com.vknewsclient.domain.StatisticItem
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class NewsFeedViewModel: ViewModel() {
@@ -26,6 +28,17 @@ class NewsFeedViewModel: ViewModel() {
             val feedPosts = repository.loadNewsFeed()
             _screenState.value = NewsFeedScreenState.Posts(posts = feedPosts)
         }
+    }
+
+    fun loadNextNewsFeed() {
+        Log.d("loadNextNewsFeed", "loadNextNewsFeed")
+
+        _screenState.value = NewsFeedScreenState.Posts(
+            posts = repository.feedPosts,
+            nextDataIsLoading = true,
+        )
+
+        loadNewsFeed()
     }
 
     fun changeLikeStatus(feedPost: FeedPost) {

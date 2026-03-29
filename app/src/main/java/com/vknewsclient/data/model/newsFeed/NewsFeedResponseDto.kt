@@ -5,4 +5,5 @@ import com.google.gson.annotations.SerializedName
 data class NewsFeedResponseDto(
     @SerializedName("items") var items: List<PostDto>,
     @SerializedName("groups") var groups: List<GroupDto>,
+    @SerializedName("next_from") var nextFrom: String?,
 )

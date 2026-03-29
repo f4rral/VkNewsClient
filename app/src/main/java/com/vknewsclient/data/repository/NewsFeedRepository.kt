@@ -1,5 +1,6 @@
 package com.vknewsclient.data.repository
 
+import android.util.Log
 import com.vk.id.VKID
 import com.vknewsclient.data.mapper.NewsFeedMapper
 import com.vknewsclient.data.model.likes.LikesCountGetDto
@@ -11,21 +12,44 @@ import com.vknewsclient.domain.StatisticType
 import kotlin.random.Random
 
 class NewsFeedRepository {
-    private val accessToken = VKID.instance.accessToken
-    private val apiService = ApiFactory.apiService
-    private val mapper = NewsFeedMapper()
-
+    private val _accessToken = VKID.instance.accessToken
+    private val _apiService = ApiFactory.apiService
+    private val _mapper = NewsFeedMapper()
     private val _feedPosts = mutableListOf<FeedPost>()
     val feedPosts: List<FeedPost>
         get() = _feedPosts.toList()
 
+    private var _nextFrom: String? = null
+
     suspend fun loadNewsFeed(): List<FeedPost> {
-        val httpGet = apiService.loadNewsFeed(token = getAccessToken())
-        val posts = mapper.mapResponseToPostDto(httpGet)
+        val startFrom = _nextFrom
 
-        _feedPosts.addAll(posts)
+        if (startFrom == null && feedPosts.isNotEmpty()) {
+            return feedPosts
+        }
 
-        return posts
+        val httpGet = if (startFrom == null) {
+            _apiService.loadNewsFeed(token = getAccessToken())
+        } else {
+            _apiService.loadNewsFeed(
+                token = getAccessToken(),
+                startFrom = startFrom
+            )
+        }
+
+        val posts = _mapper.mapResponseToPostDto(httpGet)
+
+        _nextFrom = httpGet.response.nextFrom
+        _feedPosts.apply {
+            addAll(posts)
+            distinct()
+        }
+
+        _feedPosts.forEach {
+            Log.d("feedPosts id", it.id.toString())
+        }
+
+        return feedPosts
     }
 
     suspend fun changeLikeStatus(feedPost: FeedPost) {
@@ -58,7 +82,7 @@ class NewsFeedRepository {
     }
 
     private fun getAccessToken(): String {
-        return accessToken?.token ?: throw IllegalStateException("AccessToken is null")
+        return _accessToken?.token ?: throw IllegalStateException("AccessToken is null")
     }
 
     // Фейковые данные для добавления/удаления лайков,

@@ -1,19 +1,26 @@
 package com.vknewsclient.presentation.news
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vknewsclient.domain.FeedPost
+import com.vknewsclient.ui.theme.VKMainColor
 
 @Composable
 fun NewsFeedScreen(
@@ -31,7 +38,8 @@ fun NewsFeedScreen(
                 posts = currentState.posts,
                 viewModel = viewModel,
                 innerPadding = innerPadding,
-                onCommentClickListener = onCommentClickListener
+                nextDataIsLoading = currentState.nextDataIsLoading,
+                onCommentClickListener = onCommentClickListener,
             )
         }
         NewsFeedScreenState.Initial -> {}
@@ -43,7 +51,8 @@ private fun FeedPosts(
     posts: List<FeedPost>,
     viewModel: NewsFeedViewModel,
     innerPadding: PaddingValues,
-    onCommentClickListener: (feedPost: FeedPost) -> Unit
+    nextDataIsLoading: Boolean = false,
+    onCommentClickListener: (feedPost: FeedPost) -> Unit,
 ) {
     LazyColumn(
         contentPadding = PaddingValues(
@@ -100,6 +109,26 @@ private fun FeedPosts(
                         viewModel.changeLikeStatus(feedPost = feedPost)
                     },
                 )
+            }
+        }
+
+        item {
+            if (nextDataIsLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = VKMainColor
+                    )
+                }
+            } else {
+                SideEffect {
+                    viewModel.loadNextNewsFeed()
+                }
             }
         }
     }
