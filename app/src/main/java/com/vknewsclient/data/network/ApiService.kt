@@ -1,13 +1,14 @@
 package com.vknewsclient.data.network
 
 import com.vknewsclient.data.model.gift.GiftsResponseDto
+import com.vknewsclient.data.model.likes.LikesCountGetDto
 import com.vknewsclient.data.model.newsFeed.NewsFeedGetDto
 import com.vknewsclient.data.model.newsFeed.NewsFeedResponseDto
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ApiService {
-
     @GET("gifts.get?v=5.199")
     suspend fun loadGifts(
         @Query("access_token") token: String
@@ -17,4 +18,18 @@ interface ApiService {
     suspend fun loadNewsFeed(
         @Query("access_token") token: String
     ): NewsFeedGetDto
+
+    @POST("likes.add?v=5.199&type=post")
+    suspend fun addLike(
+        @Query("access_token") token: String,
+        @Query("owner_id") ownerId: Long,
+        @Query("item_id") itemId: Long,
+    ): LikesCountGetDto
+
+//    @POST("likes.add?v=5.199&type=post")
+//    suspend fun deleteLike(
+//        @Query("access_token") token: String,
+//        @Query("owner_id") ownerId: Long,
+//        @Query("item_id") itemId: Long,
+//    ): NewsFeedGetDto
 }

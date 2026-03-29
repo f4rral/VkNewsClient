@@ -239,10 +239,11 @@ fun PreviewLightPostCard() {
     VkNewsClientTheme(darkTheme = true) {
         PostCard(
             feedPost = FeedPost(
-                id = "1",
+                id = 1,
+                communityId = 1,
                 communityName = "communityName",
-                publicationDate = 1773415043.toString(),
                 communityImgUrl = "",
+                publicationDate = 1773415043.toString(),
                 contentText = "contentText",
                 contentImageResUrl = "",
                 isLiked = false,
@@ -267,7 +268,8 @@ fun PreviewDarkPostCard() {
     VkNewsClientTheme(darkTheme = false) {
         PostCard(
             feedPost = FeedPost(
-                id = "1",
+                id = 1,
+                communityId = 1,
                 communityName = "communityName",
                 publicationDate = 1773415043.toString(),
                 communityImgUrl = "",

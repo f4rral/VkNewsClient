@@ -5,14 +5,15 @@ import androidx.navigation.NavType
 import androidx.savedstate.SavedState
 import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize
-import kotlin.random.Random
+
 
 @Parcelize
 data class FeedPost(
-    val id: String,
+    val id: Long,
+    val communityId: Long,
     val communityName: String,
-    val publicationDate: String,
     val communityImgUrl: String,
+    val publicationDate: String,
     val contentText: String,
     val contentImageResUrl: String?,
     val statistics: List<StatisticItem>,
