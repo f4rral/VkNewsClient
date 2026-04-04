@@ -39,8 +39,6 @@ import com.vknewsclient.ui.theme.VkNewsClientTheme
 fun PostCard(
     modifier: Modifier = Modifier,
     feedPost: FeedPost,
-    onViewsClickListener: (StatisticItem) -> Unit,
-    onShareClickListener: (StatisticItem) -> Unit,
     onCommentClickListener: (StatisticItem) -> Unit,
     onLikeClickListener: (StatisticItem) -> Unit,
 ) {
@@ -76,8 +74,6 @@ fun PostCard(
 
             Statistics(
                 statistics = feedPost.statistics,
-                onViewsClickListener = onViewsClickListener,
-                onShareClickListener = onShareClickListener,
                 onCommentClickListener = onCommentClickListener,
                 onLikeClickListener = onLikeClickListener,
                 isLiked = feedPost.isLiked,
@@ -136,8 +132,6 @@ private fun PostHeader(
 @Composable
 private fun Statistics(
     statistics: List<StatisticItem>,
-    onViewsClickListener: (StatisticItem) -> Unit,
-    onShareClickListener: (StatisticItem) -> Unit,
     onCommentClickListener: (StatisticItem) -> Unit,
     onLikeClickListener: (StatisticItem) -> Unit,
     isLiked: Boolean = true,
@@ -151,9 +145,6 @@ private fun Statistics(
             IconWithText(
                 iconResId = R.drawable.ic_views_count,
                 text = formatStatisticCount(viewsItem.count),
-                onItemClickListener = {
-                    onViewsClickListener(viewsItem)
-                }
             )
         }
 
@@ -166,9 +157,6 @@ private fun Statistics(
             IconWithText(
                 iconResId = R.drawable.ic_share,
                 text = formatStatisticCount(sharesItem.count),
-                onItemClickListener = {
-                    onShareClickListener(sharesItem)
-                }
             )
 
             val commentsItem = statistics.getItemByType(StatisticType.COMMENTS)
@@ -207,15 +195,20 @@ private fun formatStatisticCount(count: Int): String {
 private fun IconWithText(
     iconResId: Int,
     text: String,
-    onItemClickListener: () -> Unit,
+    onItemClickListener: (() -> Unit)? = null,
     tint: Color = MaterialTheme.colorScheme.onSecondary
 ) {
+    val modifier = if (onItemClickListener == null) {
+        Modifier
+    } else {
+        Modifier.clickable {
+            onItemClickListener()
+        }
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .clickable {
-                onItemClickListener()
-            }
+        modifier = modifier,
     ) {
         Icon(
             modifier = Modifier.size(20.dp),
@@ -254,8 +247,6 @@ fun PreviewLightPostCard() {
                     StatisticItem(type = StatisticType.VIEWS, count = 999999)
                 )
             ),
-            onViewsClickListener = { },
-            onShareClickListener = { },
             onCommentClickListener = { },
             onLikeClickListener = { },
         )
@@ -283,8 +274,6 @@ fun PreviewDarkPostCard() {
                     StatisticItem(type = StatisticType.VIEWS, count = 999999)
                 )
             ),
-            onViewsClickListener = { },
-            onShareClickListener = { },
             onCommentClickListener = { },
             onLikeClickListener = { },
         )

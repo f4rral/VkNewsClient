@@ -3,6 +3,7 @@ package com.vknewsclient.presentation.news
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -42,6 +43,19 @@ fun NewsFeedScreen(
                 onCommentClickListener = onCommentClickListener,
             )
         }
+
+        is NewsFeedScreenState.Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = VKMainColor
+                )
+            }
+        }
+
         NewsFeedScreenState.Initial -> {}
     }
 }
@@ -90,18 +104,6 @@ private fun FeedPosts(
             ) {
                 PostCard(
                     feedPost = feedPost,
-                    onViewsClickListener = { statisticItem ->
-                        viewModel.updateCount(
-                            feedPost = feedPost,
-                            statisticItem = statisticItem
-                        )
-                    },
-                    onShareClickListener =  { statisticItem ->
-                        viewModel.updateCount(
-                            feedPost = feedPost,
-                            statisticItem = statisticItem
-                        )
-                    },
                     onCommentClickListener =  {
                         onCommentClickListener(feedPost)
                     },

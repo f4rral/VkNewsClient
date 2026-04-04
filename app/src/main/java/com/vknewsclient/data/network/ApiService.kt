@@ -37,4 +37,11 @@ interface ApiService {
 //        @Query("owner_id") ownerId: Long,
 //        @Query("item_id") itemId: Long,
 //    ): NewsFeedGetDto
+
+    @GET("newsfeed.ignoreItem?v=5.199")
+    suspend fun ignorePost(
+        @Query("access_token") token: String,
+        @Query("owner_id") ownerId: Long,
+        @Query("item_id") itemId: Long,
+    )
 }
