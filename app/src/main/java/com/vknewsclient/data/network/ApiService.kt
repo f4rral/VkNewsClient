@@ -1,5 +1,6 @@
 package com.vknewsclient.data.network
 
+import com.vknewsclient.data.model.comments.CommentsGetDto
 import com.vknewsclient.data.model.gift.GiftsResponseDto
 import com.vknewsclient.data.model.likes.LikesCountGetDto
 import com.vknewsclient.data.model.newsFeed.NewsFeedGetDto
@@ -44,4 +45,11 @@ interface ApiService {
         @Query("owner_id") ownerId: Long,
         @Query("item_id") itemId: Long,
     )
+
+    @GET("wall.getComments?v=5.199&extended=1&fields=photo_100")
+    suspend fun loadComments(
+        @Query("access_token") token: String,
+        @Query("owner_id") ownerId: Long,
+        @Query("post_id") itemId: Long,
+    ): CommentsGetDto
 }

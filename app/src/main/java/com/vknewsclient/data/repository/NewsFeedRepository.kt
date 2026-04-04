@@ -7,6 +7,7 @@ import com.vknewsclient.data.model.likes.LikesCountGetDto
 import com.vknewsclient.data.model.likes.LikesCountResponseDto
 import com.vknewsclient.data.network.ApiFactory
 import com.vknewsclient.domain.FeedPost
+import com.vknewsclient.domain.PostComment
 import com.vknewsclient.domain.StatisticItem
 import com.vknewsclient.domain.StatisticType
 import kotlin.random.Random
@@ -37,7 +38,7 @@ class NewsFeedRepository {
             )
         }
 
-        val posts = _mapper.mapResponseToPostDto(httpGet)
+        val posts = _mapper.mapResponseToPost(httpGet)
 
         _nextFrom = httpGet.response.nextFrom
         _feedPosts.apply {
@@ -89,6 +90,16 @@ class NewsFeedRepository {
         )
 
         _feedPosts.remove(feedPost)
+    }
+
+    suspend fun getComments(feedPost: FeedPost): List<PostComment> {
+        val comments = _apiService.loadComments(
+            token = getAccessToken(),
+            ownerId = feedPost.communityId,
+            itemId = feedPost.id
+        )
+
+        return _mapper.mapResponseToPostComments(comments)
     }
 
     private fun getAccessToken(): String {

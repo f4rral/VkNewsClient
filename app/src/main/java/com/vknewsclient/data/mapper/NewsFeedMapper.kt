@@ -1,7 +1,10 @@
 package com.vknewsclient.data.mapper
 
+import com.vknewsclient.data.model.comments.CommentDto
+import com.vknewsclient.data.model.comments.CommentsGetDto
 import com.vknewsclient.data.model.newsFeed.NewsFeedGetDto
 import com.vknewsclient.domain.FeedPost
+import com.vknewsclient.domain.PostComment
 import com.vknewsclient.domain.StatisticItem
 import com.vknewsclient.domain.StatisticType
 import java.text.SimpleDateFormat
@@ -10,14 +13,14 @@ import java.util.Locale
 import kotlin.math.absoluteValue
 
 class NewsFeedMapper {
-    fun mapResponseToPostDto(httpGet: NewsFeedGetDto): List<FeedPost> {
-        val response = httpGet.response
+    fun mapResponseToPost(httpGet: NewsFeedGetDto): List<FeedPost> {
         val result = mutableListOf<FeedPost>()
 
+        val response = httpGet.response
         val posts = response.items
         val groups = response.groups
 
-        for(post in posts) {
+        for (post in posts) {
             if (post.id == null) {
                 continue
             }
@@ -28,7 +31,7 @@ class NewsFeedMapper {
                 communityId = post.communityId,
                 communityName = group.name,
                 communityImgUrl = group.photoUrl200,
-                publicationDate = mapTimestampToDate(post.date * 1000),
+                publicationDate = mapTimestampToDate(post.date),
                 contentText = post.text ?: "",
                 contentImageResUrl = post.attachments?.firstOrNull { it.type == "photo" }?.photo?.sizes?.lastOrNull()?.url,
                 statistics = listOf(
@@ -46,8 +49,36 @@ class NewsFeedMapper {
         return result.distinctBy { it.id }
     }
 
+    fun mapResponseToPostComments(httpGet: CommentsGetDto): List<PostComment> {
+        val result = mutableListOf<PostComment>()
+
+        val response = httpGet.response
+        val comments = response.comments
+        val profiles = response.profiles
+
+        for (comment in comments) {
+            if (comment.text.isBlank()) {
+                continue
+            }
+
+            val author = profiles.firstOrNull { it.id == comment.fromId } ?: continue
+
+            val postComment = PostComment(
+                id = comment.id,
+                authorName = "${author.firstName} ${author.lastName}",
+                authorAvatarUrl = author.avatarUrl,
+                commentText = comment.text,
+                publicationData = mapTimestampToDate(comment.date)
+            )
+
+            result.add(postComment)
+        }
+
+        return result
+    }
+
     private fun mapTimestampToDate(timestamp: Long): String {
-        val date = Date(timestamp)
+        val date = Date(timestamp * 1000)
 
         return SimpleDateFormat("dd MMMM yyyy, hh:mm", Locale.getDefault())
             .format(date)
