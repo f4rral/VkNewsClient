@@ -7,29 +7,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.vknewsclient.data.repository.NewsFeedRepository
 import com.vknewsclient.domain.FeedPost
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class CommentsViewModel(
     feedPost: FeedPost
 ): ViewModel() {
     private val _repository = NewsFeedRepository()
-    private val _screenState = MutableLiveData<CommentsScreenState>(CommentsScreenState.Initial)
-    val screenState: LiveData<CommentsScreenState> = _screenState
-
-    init {
-        loadComments(feedPost = feedPost)
-    }
-
-    fun loadComments(feedPost: FeedPost) {
-        viewModelScope.launch {
-            val comments = _repository.getComments(feedPost = feedPost)
-
-            _screenState.value = CommentsScreenState.Comments(
-                feedPost = feedPost,
-                comments = comments
+    val screenState = _repository.getComments(feedPost)
+        .map {
+            CommentsScreenState.Comments(
+                comments = it,
+                feedPost = feedPost
             )
         }
-    }
 }
 
 class CommentsViewModelFactory(
