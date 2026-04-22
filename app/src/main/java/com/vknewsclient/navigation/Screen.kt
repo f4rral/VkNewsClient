@@ -1,7 +1,7 @@
 package com.vknewsclient.navigation
 
 import com.google.gson.Gson
-import com.vknewsclient.domain.FeedPost
+import com.vknewsclient.domain.entity.FeedPost
 import com.vknewsclient.extensions.encode
 
 sealed class Screen(

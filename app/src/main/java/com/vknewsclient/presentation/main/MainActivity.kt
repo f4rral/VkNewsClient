@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vk.id.VKID
-import com.vknewsclient.domain.AuthState
+import com.vknewsclient.domain.entity.AuthState
 import com.vknewsclient.ui.theme.VkNewsClientTheme
 
 class MainActivity : ComponentActivity() {

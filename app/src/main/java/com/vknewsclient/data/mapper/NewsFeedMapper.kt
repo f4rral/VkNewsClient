@@ -1,12 +1,11 @@
 package com.vknewsclient.data.mapper
 
-import com.vknewsclient.data.model.comments.CommentDto
 import com.vknewsclient.data.model.comments.CommentsGetDto
 import com.vknewsclient.data.model.newsFeed.NewsFeedGetDto
-import com.vknewsclient.domain.FeedPost
-import com.vknewsclient.domain.PostComment
-import com.vknewsclient.domain.StatisticItem
-import com.vknewsclient.domain.StatisticType
+import com.vknewsclient.domain.entity.FeedPost
+import com.vknewsclient.domain.entity.PostComment
+import com.vknewsclient.domain.entity.StatisticItem
+import com.vknewsclient.domain.entity.StatisticType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

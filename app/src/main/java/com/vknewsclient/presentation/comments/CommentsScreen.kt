@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.vknewsclient.R
-import com.vknewsclient.domain.FeedPost
-import com.vknewsclient.domain.PostComment
+import com.vknewsclient.domain.entity.FeedPost
+import com.vknewsclient.domain.entity.PostComment
 import com.vknewsclient.ui.theme.VkNewsClientTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

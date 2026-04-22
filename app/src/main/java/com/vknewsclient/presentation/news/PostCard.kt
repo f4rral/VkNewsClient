@@ -28,10 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.vknewsclient.R
-import com.vknewsclient.domain.FeedPost
-import com.vknewsclient.domain.StatisticItem
-import com.vknewsclient.domain.StatisticType
-import com.vknewsclient.domain.getItemByType
+import com.vknewsclient.domain.entity.FeedPost
+import com.vknewsclient.domain.entity.StatisticItem
+import com.vknewsclient.domain.entity.StatisticType
+import com.vknewsclient.domain.entity.getItemByType
 import com.vknewsclient.ui.theme.DarkRed
 import com.vknewsclient.ui.theme.VkNewsClientTheme
 

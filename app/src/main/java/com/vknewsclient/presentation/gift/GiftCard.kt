@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.vknewsclient.domain.Gift
+import com.vknewsclient.domain.entity.Gift
 import com.vknewsclient.ui.theme.VkNewsClientTheme
 
 @Composable

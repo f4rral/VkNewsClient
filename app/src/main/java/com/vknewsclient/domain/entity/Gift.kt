@@ -1,6 +1,4 @@
-package com.vknewsclient.domain
-
-import com.vknewsclient.R
+package com.vknewsclient.domain.entity
 
 data class Gift(
     val id: String,

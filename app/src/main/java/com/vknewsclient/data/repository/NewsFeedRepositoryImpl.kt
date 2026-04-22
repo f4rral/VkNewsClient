@@ -6,10 +6,11 @@ import com.vknewsclient.data.mapper.NewsFeedMapper
 import com.vknewsclient.data.model.likes.LikesCountGetDto
 import com.vknewsclient.data.model.likes.LikesCountResponseDto
 import com.vknewsclient.data.network.ApiFactory
-import com.vknewsclient.domain.FeedPost
-import com.vknewsclient.domain.PostComment
-import com.vknewsclient.domain.StatisticItem
-import com.vknewsclient.domain.StatisticType
+import com.vknewsclient.domain.entity.FeedPost
+import com.vknewsclient.domain.entity.PostComment
+import com.vknewsclient.domain.entity.StatisticItem
+import com.vknewsclient.domain.entity.StatisticType
+import com.vknewsclient.domain.repository.NewsFeedRepository
 import com.vknewsclient.extensions.mergeWith
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,7 @@ import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
 import kotlin.random.Random
 
-class NewsFeedRepository {
+class NewsFeedRepositoryImpl: NewsFeedRepository {
 
     private val _accessToken = VKID.instance.accessToken
 
@@ -69,9 +70,7 @@ class NewsFeedRepository {
     }.retry(retries = 2) {
         delay(RETRY_TIMEOUT_MILLIS)
         true
-    }.catch {
-
-    }
+    }.catch { }
 
     private val _apiService = ApiFactory.apiService
     private val _mapper = NewsFeedMapper()
@@ -82,7 +81,7 @@ class NewsFeedRepository {
 
     private var _nextFrom: String? = null
 
-    val newsFeedFlow: StateFlow<List<FeedPost>> = loadedListFlow
+    private val newsFeedFlow: StateFlow<List<FeedPost>> = loadedListFlow
         .mergeWith(refreshedListFlow)
         .stateIn(
             scope = coroutineScope,
@@ -90,7 +89,7 @@ class NewsFeedRepository {
             initialValue = feedPosts
         )
 
-    suspend fun changeLikeStatus(feedPost: FeedPost) {
+    override suspend fun changeLikeStatus(feedPost: FeedPost) {
 //        val httpGet = apiService.addLike(
 //            token = fakeToken,
 //            ownerId = feedPost.communityId,
@@ -120,7 +119,7 @@ class NewsFeedRepository {
         refreshedListFlow.emit(feedPosts)
     }
 
-    suspend fun deletePost(feedPost: FeedPost) {
+    override suspend fun deletePost(feedPost: FeedPost) {
         _apiService.ignorePost(
             token = getAccessToken(),
             ownerId = feedPost.communityId,
@@ -131,7 +130,11 @@ class NewsFeedRepository {
         refreshedListFlow.emit(feedPosts)
     }
 
-    fun getComments(feedPost: FeedPost): Flow<List<PostComment>> = flow {
+    override fun getNewsFeed(): StateFlow<List<FeedPost>> {
+        return newsFeedFlow
+    }
+
+    override fun getComments(feedPost: FeedPost): StateFlow<List<PostComment>> = flow {
         val comments = _apiService.loadComments(
             token = getAccessToken(),
             ownerId = feedPost.communityId,
@@ -142,9 +145,13 @@ class NewsFeedRepository {
     }.retry {
         delay(RETRY_TIMEOUT_MILLIS)
         true
-    }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.Lazily,
+        initialValue = listOf()
+    )
 
-    suspend fun loadNextData() {
+    override suspend fun loadNextData() {
         nextDataNeededEvents.emit(Unit)
     }
 

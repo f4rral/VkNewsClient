@@ -5,22 +5,24 @@ import com.vk.id.AccessToken
 import com.vk.id.VKID
 import com.vk.id.refresh.VKIDRefreshTokenCallback
 import com.vk.id.refresh.VKIDRefreshTokenFail
-import com.vknewsclient.domain.AuthState
+import com.vknewsclient.domain.entity.AuthState
+import com.vknewsclient.domain.repository.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Date
 
 
-class AuthRepository {
+class AuthRepositoryImpl: AuthRepository {
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val authStateEvent = MutableSharedFlow<Unit>(replay = 1)
 
-    val authState = flow {
+    private val authStateFlow = flow {
         authStateEvent.emit(Unit)
 
         authStateEvent.collect {
@@ -50,8 +52,12 @@ class AuthRepository {
         initialValue = AuthState.Initial
     )
 
-    suspend fun updateAuthState() {
+    override suspend fun updateAuthState() {
         authStateEvent.emit(Unit)
+    }
+
+    override fun getAuthStateFlow(): StateFlow<AuthState> {
+        return authStateFlow
     }
 
     private fun refreshToken() {

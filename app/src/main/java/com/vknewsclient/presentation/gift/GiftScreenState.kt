@@ -1,6 +1,6 @@
 package com.vknewsclient.presentation.gift
 
-import com.vknewsclient.domain.Gift
+import com.vknewsclient.domain.entity.Gift
 
 sealed class GiftScreenState {
 

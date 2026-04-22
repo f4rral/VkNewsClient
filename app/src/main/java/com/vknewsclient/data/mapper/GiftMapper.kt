@@ -1,7 +1,7 @@
 package com.vknewsclient.data.mapper
 
 import com.vknewsclient.data.model.gift.GiftsResponseDto
-import com.vknewsclient.domain.Gift
+import com.vknewsclient.domain.entity.Gift
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

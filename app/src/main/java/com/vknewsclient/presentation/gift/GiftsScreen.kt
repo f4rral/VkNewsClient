@@ -10,7 +10,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.vknewsclient.domain.Gift
+import com.vknewsclient.domain.entity.Gift
 
 @Composable
 fun GiftsScreen(

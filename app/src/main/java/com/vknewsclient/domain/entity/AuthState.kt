@@ -1,4 +1,4 @@
-package com.vknewsclient.domain
+package com.vknewsclient.domain.entity
 
 sealed class AuthState {
 

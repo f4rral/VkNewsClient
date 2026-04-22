@@ -8,13 +8,19 @@ import com.vk.id.VKID
 import com.vk.id.VKIDAuthFail
 import com.vk.id.auth.VKIDAuthCallback
 import com.vk.id.auth.VKIDAuthParams
-import com.vknewsclient.data.repository.AuthRepository
+import com.vknewsclient.data.repository.AuthRepositoryImpl
+import com.vknewsclient.domain.usecases.GetAuthStateFlowUseCase
+import com.vknewsclient.domain.usecases.UpdateAuthStateUseCase
 import kotlinx.coroutines.launch
 
-class MainViewModel(): ViewModel() {
+class MainViewModel: ViewModel() {
 
-    private val repository = AuthRepository()
-    val authState = repository.authState
+    private val repository = AuthRepositoryImpl()
+
+    private val getAuthStateFlowUseCase = GetAuthStateFlowUseCase(repository)
+    private val updateAuthStateUseCase = UpdateAuthStateUseCase(repository)
+
+    val authState = getAuthStateFlowUseCase()
 
     fun auth() {
         viewModelScope.launch {
@@ -31,13 +37,13 @@ class MainViewModel(): ViewModel() {
     private val _vkAuthCallback = object : VKIDAuthCallback {
         override fun onAuth(accessToken: AccessToken) {
             viewModelScope.launch {
-                repository.updateAuthState()
+                updateAuthStateUseCase()
             }
         }
 
         override fun onFail(fail: VKIDAuthFail) {
             viewModelScope.launch {
-                repository.updateAuthState()
+                updateAuthStateUseCase()
             }
         }
     }
